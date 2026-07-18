@@ -16,10 +16,10 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Use Node.js 20
+    - name: Use Node.js 22
       uses: actions/setup-node@v4
       with:
-        node-version: '20'
+        node-version: '22'
         cache: 'npm'
         
     - name: Use Java 21
@@ -44,10 +44,10 @@ jobs:
       run: npm run test:unit
       
     - name: Integration Tests
-      run: npx firebase emulators:exec --project demo-project "npm run test:integration"
+      run: npm run test:integration
       
     - name: Playwright E2E Tests (Chromium)
-      run: npx firebase emulators:exec --project demo-project "npm run test:e2e:chromium"
+      run: npm run test:e2e
       
     - name: Build
       run: npm run build
