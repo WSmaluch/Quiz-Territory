@@ -121,6 +121,11 @@ describe('complete Local Party game flow', () => {
 
     const hostClientId = randomUUID();
     await callable(host, 'manageHostLease')({ sessionId, action: 'ACQUIRE', clientId: hostClientId });
+    const renewHostLease = () => callable(host, 'manageHostLease')({
+      sessionId,
+      action: 'RENEW',
+      clientId: hostClientId,
+    });
     const refreshedDisplay = await callable(host, 'refreshDisplayToken')({
       sessionId,
       commandId: randomUUID(),
@@ -174,6 +179,7 @@ describe('complete Local Party game flow', () => {
       reserveQuestionIds: [],
     });
     await callable(host, 'startDuel')({ sessionId, commandId: randomUUID() });
+    await renewHostLease();
 
     let publicState = (await adminDb.ref(`liveSessions/${sessionId}/public`).get()).val();
     expect(publicState.state).toBe('DUEL_ACTIVE');
@@ -328,6 +334,7 @@ describe('complete Local Party game flow', () => {
     expect(publicState.duel.currentQuestion.questionId).toBe(`${duelCategoryId}-010`);
     expect(publicState.duel.activePlayerId).toBe(activeBeforeTextWrong);
     expectOnlyFiniteNumbers(publicState);
+    await renewHostLease();
     await callable(host, 'pauseDuel')({ sessionId, commandId: randomUUID(), payload: { reason: 'HOST_MANUAL' } });
     expect((await adminDb.ref(`liveSessions/${sessionId}/public/state`).get()).val()).toBe('DUEL_PAUSED');
     await callable(host, 'resumeDuel')({ sessionId, commandId: randomUUID() });
@@ -345,6 +352,7 @@ describe('complete Local Party game flow', () => {
 
     let championId = publicState.duel.attackerId;
     const eliminatedPlayerId = publicState.duel.defenderId;
+    await renewHostLease();
     await callable(host, 'endDuelManually')({
       sessionId, commandId: randomUUID(), payload: { winnerId: championId },
     });
@@ -385,6 +393,7 @@ describe('complete Local Party game flow', () => {
 
     let rounds = 1;
     while (rounds < 4) {
+      await renewHostLease();
       publicState = (await adminDb.ref(`liveSessions/${sessionId}/public`).get()).val();
       if (publicState.state === 'GAME_COMPLETE') break;
       if (publicState.state === 'CONTINUE_DECISION') {
@@ -408,7 +417,7 @@ describe('complete Local Party game flow', () => {
     publicState = (await adminDb.ref(`liveSessions/${sessionId}/public`).get()).val();
     expect(publicState.state).toBe('GAME_COMPLETE');
     expect(publicState.winnerId).toBe(championId);
-    await callable(host, 'manageHostLease')({ sessionId, action: 'RENEW', clientId: hostClientId });
+    await renewHostLease();
     const results = await callable(host, 'getGameResults')({ sessionId }) as { data: any };
     expect(results.data.game.winnerId).toBe(championId);
     expect(results.data.game.playerResults).toHaveLength(4);

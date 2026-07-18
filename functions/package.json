@@ -7,7 +7,7 @@
     "build": "node -e \"require('fs').rmSync('lib',{recursive:true,force:true})\" && tsc",
     "build:watch": "tsc --watch",
     "test": "vitest run src/utils src/data/question-bank src/session.test.ts",
-    "test:integration": "vitest run src/integration"
+    "test:integration": "vitest run src/integration --no-file-parallelism --maxWorkers=1 --testTimeout=30000 --hookTimeout=30000"
   },
   "keywords": [],
   "author": "",
