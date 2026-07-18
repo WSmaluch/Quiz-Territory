@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /sessions/{sessionId} {
+      allow read: if request.auth != null;
+      allow write: if false;
+      
+      match /private/config {
+        allow read, write: if request.auth != null && request.auth.uid == get(/databases/$(database)/documents/sessions/$(sessionId)).data.ownerId;
+      }
+      
+      match /recovery/{docId} {
+        // Only the owning administrator may read a recovery snapshot
+        allow read: if request.auth != null && request.auth.uid == resource.data.ownerId;
+        // Clients cannot create, update or delete recovery snapshots (handled by Cloud Functions)
+        allow write: if false;
+      }
+    }
+    
+    match /completedGames/{sessionId} {
+      // Only the owning administrator may read completed-game records
+      allow read: if request.auth != null && request.auth.uid == resource.data.ownerId;
+      // Clients cannot create or modify completed-game records
+      allow write: if false;
+    }
+
+    match /roomCodeReservations/{code} {
+      // Only server functions should mutate this
+      allow read, write: if false; 
+    }
+  }
+}

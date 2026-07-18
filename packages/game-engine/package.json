@@ -1,0 +1,23 @@
+{
+  "name": "game-engine",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "node -e \"require('fs').rmSync('dist',{recursive:true,force:true})\" && tsc",
+    "test": "vitest run"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "seedrandom": "^3.0.5",
+    "shared": "file:../shared"
+  },
+  "devDependencies": {
+    "@types/seedrandom": "^3.0.8",
+    "vitest": "^4.1.10"
+  }
+}

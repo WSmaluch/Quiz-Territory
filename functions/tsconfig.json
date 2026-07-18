@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "noImplicitReturns": true,
+    "noUnusedLocals": false,
+    "outDir": "lib",
+    "rootDir": "src",
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2022",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "compileOnSave": true,
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "src/integration",
+    "**/*.test.ts",
+    "src/phase5/media/pipeline.ts",
+    "src/phase5/media/providers.ts",
+    "src/phase5/gemini/*",
+    "src/phase5/geminiProvider.ts"
+  ]
+}

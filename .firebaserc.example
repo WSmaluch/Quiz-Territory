@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "staging": "quiz-territory-staging",
+    "production": "quiz-territory-production"
+  }
+}

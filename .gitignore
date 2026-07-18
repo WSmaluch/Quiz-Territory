@@ -1,0 +1,53 @@
+# Dependencies
+node_modules/
+
+# Build and coverage output
+dist/
+lib/
+coverage/
+.vite/
+*.tsbuildinfo
+*.tmp
+
+# TypeScript output emitted next to package config files
+packages/*/vitest.config.js
+packages/*/vitest.config.js.map
+packages/*/vitest.config.d.ts
+packages/*/vitest.config.d.ts.map
+
+# Environment files and local Firebase configuration
+.env
+.env.*
+!.env.example
+!.env.*.example
+.firebaserc
+functions/.secret.local
+
+# Test and browser artifacts
+test-results/
+playwright-report/
+blob-report/
+.vitest-reports/
+
+# Firebase emulator state and diagnostics
+.firebase/
+.java/
+.local-firebase-data/
+firebase-export-*/
+*-debug.log
+firebase-debug*.log
+
+# Generated reports and local logs
+reports/
+*.log
+
+# OS and editor files
+.DS_Store
+.idea/
+.vscode/
+
+# One-off local migration helpers
+/fix-imports*.ts
+/fix_*.js
+/replace_players.js
+/verify.sh

@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+:root {
+  --color-primary: #0ea5e9; /* neon blue */
+  --color-secondary: #2dd4bf; /* turquoise */
+  --color-accent: #fbbf24; /* gold */
+  --color-bg: #1e293b; /* graphite background */
+}
+
+body {
+  background-color: var(--color-bg);
+  color: white;
+  font-family: 'Inter', system-ui, Avenir, Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}

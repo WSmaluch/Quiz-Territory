@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    
+    env:
+      VITE_USE_FIREBASE_EMULATORS: "true"
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Use Node.js 20
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm'
+        
+    - name: Use Java 21
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin'
+        java-version: '21'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Install Playwright Browsers
+      run: npx playwright install --with-deps chromium
+      
+    - name: Lint
+      run: npm run lint
+      
+    - name: Typecheck
+      run: npm run typecheck
+      
+    - name: Unit Tests
+      run: npm run test:unit
+      
+    - name: Integration Tests
+      run: npx firebase emulators:exec --project demo-project "npm run test:integration"
+      
+    - name: Playwright E2E Tests (Chromium)
+      run: npx firebase emulators:exec --project demo-project "npm run test:e2e:chromium"
+      
+    - name: Build
+      run: npm run build

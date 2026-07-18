@@ -1,0 +1,47 @@
+{
+  "rules": {
+    "liveSessions": {
+      "$sessionId": {
+        ".read": "auth != null && data.child('hostLease/hostId').val() == auth.uid",
+        "displays": {
+          ".read": "auth != null && data.parent().child('hostLease/hostId').val() == auth.uid",
+          ".write": "false" 
+        },
+        "host": {
+          ".read": "auth != null && data.parent().child('hostLease/hostId').val() == auth.uid",
+          ".write": "false"
+        },
+        "commandHistory": {
+          ".read": "auth != null && data.parent().child('hostLease/hostId').val() == auth.uid",
+          ".write": "false"
+        },
+        "presence": {
+          ".read": "auth != null && (data.parent().child('hostLease/hostId').val() == auth.uid || data.parent().child('publicPlayers').child(auth.uid).exists() || data.parent().child('displays').child(auth.uid).exists())",
+          "$playerId": {
+            ".write": "auth != null && auth.uid == $playerId"
+          }
+        },
+        "publicPlayers": {
+          ".read": "auth != null && (data.parent().child('hostLease/hostId').val() == auth.uid || data.parent().child('publicPlayers').child(auth.uid).exists() || data.parent().child('displays').child(auth.uid).exists())",
+          "$uid": {
+            ".write": "false"
+          }
+        },
+        "playerPrivate": {
+          "$uid": {
+            ".read": "auth != null && auth.uid == $uid && data.parent().parent().child('publicPlayers').child(auth.uid).exists()",
+            ".write": "false"
+          }
+        },
+        "hostLease": {
+          ".read": "auth != null && (data.child('hostId').val() == auth.uid || data.parent().child('publicPlayers').child(auth.uid).exists() || data.parent().child('displays').child(auth.uid).exists())",
+          ".write": "auth != null && data.parent().child('hostLease/hostId').val() == auth.uid"
+        },
+        "public": {
+          ".read": "auth != null && (data.parent().child('hostLease/hostId').val() == auth.uid || data.parent().child('publicPlayers').child(auth.uid).exists() || data.parent().child('displays').child(auth.uid).exists())",
+          ".write": "false" 
+        }
+      }
+    }
+  }
+}

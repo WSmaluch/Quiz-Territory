@@ -1,0 +1,32 @@
+rules_version = '2';
+
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    // 1. Temporary administrator uploads
+    match /temporary-package-uploads/{ownerId}/{uploadId} {
+      allow read: if request.auth != null && request.auth.uid == ownerId;
+      allow write: if request.auth != null 
+                   && request.auth.uid == ownerId
+                   && request.resource.size < 15 * 1024 * 1024 // 15MB
+                   && request.resource.contentType.matches('image/.*');
+    }
+
+    // 2. Processed package assets
+    match /package-media/{ownerId}/{packageId}/{revisionId}/{mediaId}/{fileName} {
+      allow read: if request.auth != null && request.auth.uid == ownerId;
+      allow write: if false; // Only Cloud Functions can write here
+    }
+
+    // 3. Private-photo originals
+    match /private-photos/{ownerId}/{packageId}/{revisionId}/{mediaId}/{fileName} {
+      allow read: if request.auth != null && request.auth.uid == ownerId;
+      allow write: if false; // Only written via protected CF
+    }
+
+    // Default deny
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
