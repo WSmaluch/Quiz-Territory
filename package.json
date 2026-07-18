@@ -22,7 +22,7 @@
     "emulators:export": "firebase emulators:export ./firebase/emulator-data --project quiz-territory-local",
     "emulators:clear": "rm -rf ./firebase/emulator-data",
     "seed:demo": "npm run start --workspace=scripts seed",
-    "test:unit": "npm run test --workspaces --if-present",
+    "test:unit": "npm run build --workspace=shared && npm run build --workspace=game-engine && npm run test --workspaces --if-present",
     "test:integration": "npm run build --workspace=shared && npm run build:functions && if [ -d .java/jdk-21.0.3+9-jre/Contents/Home ]; then export JAVA_HOME=\"$PWD/.java/jdk-21.0.3+9-jre/Contents/Home\" && export PATH=\"$JAVA_HOME/bin:$PATH\"; fi; firebase emulators:exec --only auth,functions,firestore,database,storage --project quiz-territory-local \"npm run test:integration --prefix functions\"",
     "test:rules": "if [ -d .java/jdk-21.0.3+9-jre/Contents/Home ]; then export JAVA_HOME=\"$PWD/.java/jdk-21.0.3+9-jre/Contents/Home\" && export PATH=\"$JAVA_HOME/bin:$PATH\"; fi; firebase emulators:exec --only database --project quiz-territory-local \"vitest run firebase/tests/database.rules.test.ts\"",
     "test:e2e": "npm run build --workspace=shared && npm run build:functions && if [ -d .java/jdk-21.0.3+9-jre/Contents/Home ]; then export JAVA_HOME=\"$PWD/.java/jdk-21.0.3+9-jre/Contents/Home\" && export PATH=\"$JAVA_HOME/bin:$PATH\"; fi; export VITE_USE_FIREBASE_EMULATORS=true; firebase emulators:exec --only auth,functions,firestore,database,storage --project quiz-territory-local \"npm run test:e2e:chromium --workspace=web\"",
